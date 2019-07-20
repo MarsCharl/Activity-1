@@ -1,28 +1,88 @@
 <?php
 require("../model/UserModel.php");
 class UserController{
-    private $userModel;
+    private $usermodelObj;
+	
 
     public function __construct(){
-        $this->userModel = new UserModel();
+        $this->usermodelObj = new userModel();
     }
-    public function addUser($name, $email,$username, $password){
+    public function addUser($name, $email, $username, $password){
         //perform data validation
-        $this->userModel->name = $name;
-        $this->userModel->email = $email;
-        $this->userModel->username = $username;
-        $this->userModel->password = $password;
-        $this->userModel->insert();
+		
+		if($name == " " || $email == " " ){
+			echo "<br/>"."All Feilds Must Be Fill In";
+		}
+		else if ($username == " " || $password == " "){
+			echo "<br/>"."All Feilds Must Be Fill In";
+		}
+		else{
+        $this->usermodelObj->name = $name;
+        $this->usermodelObj->email = $email;
+        $this->usermodelObj->username = $username;
+        $this->usermodelObj->password = $password;
+        $query = $this->usermodelObj->insert();
+		
+		
+		if($query){
+		 return true;
+		}
+		else
+		{
+		 $fail = "Failed to add";
+		 return $fail;
+		}
+		}
     }
-
+	
+	public function updateUser($id, $name, $email, $username, $password){
+	    //perform data validation
+		if($name == " " || $email == " " ){
+			echo "<br/>"."All Feilds Must Be Fill In";
+		}
+		else if ($username == " " || $password == " "){
+			echo "<br/>"."All Feilds Must Be Fill In";
+		}
+		else{
+		$this->usermodelObj->name = $name;
+        $this->usermodelObj->email = $email;
+        $this->usermodelObj->username = $username;
+        $this->usermodelObj->password = $password;
+		$query = $this->usermodelObj->update($id);
+		
+		if($query){
+		 return true;
+		}
+		else
+		{
+		 $fail = "Failed to update";
+		 return $fail;
+		}
+		}
+	}
     public function getAllUser(){
-        return $this->userModel->readAll();
+        $this->usermodelObj->readAll();
     }
-
+ 
+    public function deleteUser($id){
+		
+		
+		$query = $this->usermodelObj->delete($id);
+		if($query){
+		 return true;
+		}
+		else
+		{
+		 $fail = "Failed to update";
+		 return $fail;
+		}
+	}
+	
     public function __destruct(){
-        unset($this->userModel);
+        unset($this->usermodelObj);
     }
 }
+/*
 $userCont = new UserController();
 $return = $userCont->getAllUser();
 while($data = mysqli_fetch_assoc($return)){
@@ -31,5 +91,5 @@ while($data = mysqli_fetch_assoc($return)){
     echo "username: ".$data["username"]."<br/>";
     echo "password: ".$data["password"]."<br/>";
     echo "------------------------------------------<br/>";
-}
+}*/
 ?>
